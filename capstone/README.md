@@ -15,7 +15,7 @@ Taste Elevator CaTEring Corp. Customers purchased food items from the catering m
     > ```
 3. The inventory is stocked via an input file when the application starts.  **2 different files are provided, make sure your program will work with either one.**
 4. Each time the application runs, the inventory is restocked.  The only time the inventory is stocked is when it is started.
-5. When the customer selects "(D) Display caTEring Items", they're presented
+5. When the customer selects "**(D) Display caTEring Items**", they're presented
    with a list of all items in the machine with its quantity remaining:
    
     - Each item has a slot identifier and a purchase price.
@@ -33,11 +33,11 @@ Taste Elevator CaTEring Corp. Customers purchased food items from the catering m
     > Current Money Provided: $2.00
     >```
 7. The purchase process flow is as follows:
-    1. Selecting "(M) Feed Money" allows the customer to repeatedly feed money into the
+    1. Selecting "**(M) Feed Money**" allows the customer to repeatedly feed money into the
        machine in valid, whole dollar amounts—for example, $1, $5, $10, or $20.
         - The "Current Money Provided" indicates how much money the customer
         has fed into the machine.
-    2. Selecting "(S) Select Item" allows the customer to select an item to
+    2. Selecting "**(S) Select Item**" allows the customer to select an item to
        purchase.
         - Show the list of items available and allow the customer to enter
         a slot identifier to select an item.
@@ -59,10 +59,10 @@ Taste Elevator CaTEring Corp. Customers purchased food items from the catering m
         - The customer's money is returned using nickels, dimes, quarters, and dollars (single dollars)
         (using the smallest amount of dollars and coins possible).
         - The machine's current balance must be updated to $0 remaining.
-    4. After completing their purchase, the user is returned to the "Main" menu to
+    4. After completing their purchase, the user is **returned to the "Main" menu** to
     continue using the caTEring machine.
 8. All purchases must be audited to prevent theft by creating a Audit file:
-   - Each purchase must generate a line in a file called `Audit.txt`.
+   - **Each purchase must generate a line in a file called `Audit.txt`.**
    - The audit entry must be in the format:
         >```
         > 01/01/2016 12:00:00 PM MONEY FED:         $5.00 $5.00
@@ -71,8 +71,8 @@ Taste Elevator CaTEring Corp. Customers purchased food items from the catering m
          >01/01/2016 12:01:25 PM Turkey Sandwich B2 $8.50 $7.50
          >01/01/2016 12:01:35 PM CHANGE GIVEN:      $7.50 $0.00
          >```
-9. Create as many of your classes as possible to be "testable" classes. **Limit console**
-**input and output to as few classes as possible**.
+9. Create as many of your classes as possible to be "testable" classes. Limit console
+input and output to as few classes as possible.
 10. Optional - Sales Report
     - Provide a "Hidden" menu option on the main menu ("S") that writes to a sales
     report that shows the total sales since the machine was started. The name of the

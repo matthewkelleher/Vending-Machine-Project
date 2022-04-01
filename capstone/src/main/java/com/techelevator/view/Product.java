@@ -40,10 +40,6 @@ public abstract class Product {
         return this.getSlot () + " " + this.getName() + " " + " $" + this.getPrice() + " " + this.getInventory();
     }
 
-//    public String listValues() {
-//        return this.getName() + " " + this.getInventory();
-//    }
-
 }
 
 

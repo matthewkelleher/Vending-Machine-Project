@@ -24,7 +24,7 @@ public class Menu {
                 } else if (Objects.equals(lineArray[2], "Sandwich")) {
                     menuList.put(lineArray[0], new Sandwich(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
                 } else if (Objects.equals(lineArray[2], "Dessert")) {
-                    menuList.put(lineArray[0], new Sandwich(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
+                    menuList.put(lineArray[0], new Dessert(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
                 }
 
             }
@@ -40,11 +40,17 @@ public class Menu {
         for (Map.Entry<String, Product> entry : menuList.entrySet()) {
             String key = entry.getKey();
 
-            Object value = entry.getValue();
+            Product value = entry.getValue();
             returnValue += value + "\n";
         }
         System.out.println(returnValue);
     }
+
+    public Product getValueFromKey(String key) {
+        return menuList.get(key);
+    }
+
+    public Boolean confirmKey(String key) {return menuList.containsKey(key); }
 
 
 }

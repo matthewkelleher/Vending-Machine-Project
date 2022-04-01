@@ -28,16 +28,24 @@ public abstract class Product {
 
     public Integer getInventory() { return inventory; }
 
+    public String stringifyInventory() {
+        if(this.inventory != 0) {
+            return String.valueOf(inventory);
+        } else {
+            return "NO LONGER AVAILABLE";
+        }
+    }
+
     public void setInventory(int inventory) {
         this.inventory = inventory;
     }
 
-    public abstract void getSound();
+    public abstract String getSound();
 
 
     @Override
     public String toString() {
-        return this.getSlot () + " " + this.getName() + " " + " $" + this.getPrice() + " " + this.getInventory();
+        return this.getSlot () + " " + this.getName() + " " + " $" + this.getPrice() + " " + this.stringifyInventory();
     }
 
 }

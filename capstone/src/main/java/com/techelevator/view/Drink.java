@@ -7,7 +7,7 @@ public class Drink extends Product {
 
     }
 
-    public void getSound() {
-        System.out.println("Drinky, Drinky, Slurp Slurp!");
+    public String getSound() {
+        return "Drinky, Drinky, Slurp Slurp!";
     }
 }

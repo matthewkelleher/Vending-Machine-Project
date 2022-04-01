@@ -10,7 +10,7 @@ public class Munchy extends Product{
 
     }
 
-    public void getSound() {
-        System.out.println("Munchy, Munchy, so Good!");
+    public String getSound() {
+         return "Munchy, Munchy, so Good!";
     }
 }

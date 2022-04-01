@@ -7,7 +7,7 @@ public class Sandwich extends Product {
 
     }
 
-    public void getSound() {
-        System.out.println("Sandwich So Delicious, Yum!");
+    public String getSound() {
+        return "Sandwich So Delicious, Yum!";
     }
 }

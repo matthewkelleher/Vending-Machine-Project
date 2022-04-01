@@ -7,8 +7,8 @@ public class Dessert extends Product {
 
     }
 
-    public void getSound() {
-        System.out.println("Sugar, Sugar, so Sweet!");
+    public String getSound() {
+        return "Sugar, Sugar, so Sweet!";
     }
 }
 

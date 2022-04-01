@@ -14,15 +14,7 @@ public class CaTEringCapstoneCLI {
 
 	public void displayLevel1() {
 
-		System.out.println("(D) Display CaTEring Items\n.(P) Purchase\n(E) Exit");
-		String level1MenuInput = inputScanner.nextLine().toLowerCase();
-		if(level1MenuInput == "D") {
-			menu.displayItems();
-		} else if(level1MenuInput == "P") {
-			displayLevel1_P();
-		} else if(level1MenuInput == "E") {
-			System.exit(0);
-		}
+
 	}
 
 		public void displayLevel1_P() {
@@ -73,13 +65,14 @@ public class CaTEringCapstoneCLI {
 		boolean keepGoing = true;
 
 		do {
-			this.displayLevel1();
-			String level1Input = inputScanner.nextLine();
-			if (level1Input.equals("D")) {
-				displayLevel1_D();
-			} else if (level1Input.equals("P")) {
+			System.out.println("(D) Display CaTEring Items\n.(P) Purchase\n(E) Exit");
+			String level1MenuInput = inputScanner.nextLine().toLowerCase();
+			if(level1MenuInput == "D") {
+				menu.displayItems();
+			} else if(level1MenuInput == "P") {
 				displayLevel1_P();
-			} else if (level1Input.equals("E")) {
+
+			} else if (level1MenuInput.equals("E")) {
 				keepGoing = false;
 			}
 		} while (keepGoing);

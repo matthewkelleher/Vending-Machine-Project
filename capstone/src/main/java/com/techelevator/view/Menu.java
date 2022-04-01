@@ -46,30 +46,8 @@ public class Menu {
         System.out.println(returnValue);
     }
 
-    public void selectItems() {
-        String returnValue = "";
-        for (Map.Entry<String, Product> entry : menuList.entrySet()) {
-            String key = entry.getKey();
 
-            Object value = entry.getValue();
-            returnValue += value + "\n";
-        }
-        System.out.println(returnValue);
-    }
 }
-
-
-
-//    @Override
-//    public String toString() {
-//
-//        String str = "";
-//
-//            str += product.getSlot() + "    " + product.getName() + "   " + "$" + product.getPrice() + "    " + product.getInventory() + "\n";
-//
-//
-//        return str;
-//    }
 
 
 

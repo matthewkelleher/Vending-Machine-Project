@@ -9,12 +9,11 @@ public abstract class Product {
     private double price;
     private int inventory;
 
-
-    public Product(String slot, String name, double price) {
-        this.name = name;
-        this.price = price;
-        this.slot = slot;
-        this.inventory = 7;
+    public Product(String name, double price, String slot, int inventory) {
+       this.name = name;
+       this.price = price;
+       this.slot = slot;
+       this.inventory = inventory;
     }
 
     public String getName() {
@@ -28,6 +27,12 @@ public abstract class Product {
     public String getSlot() { return slot; }
 
     public Integer getInventory() { return inventory; }
+
+    public void setInventory(int inventory) {
+        this.inventory = inventory;
+    }
+
+
 
 
 

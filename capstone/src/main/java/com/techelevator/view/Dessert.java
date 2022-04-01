@@ -6,6 +6,10 @@ public class Dessert extends Product {
         super(name, price, slot, inventory);
 
     }
+
+    public void getSound() {
+        System.out.println("Sugar, Sugar, so Sweet!");
+    }
 }
 
 

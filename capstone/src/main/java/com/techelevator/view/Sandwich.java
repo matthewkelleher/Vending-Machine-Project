@@ -6,4 +6,8 @@ public class Sandwich extends Product {
         super(name, price, slot, inventory);
 
     }
+
+    public void getSound() {
+        System.out.println("Sandwich So Delicious, Yum!");
+    }
 }

@@ -32,7 +32,7 @@ public abstract class Product {
         this.inventory = inventory;
     }
 
-
+    public abstract void getSound();
 
 
 

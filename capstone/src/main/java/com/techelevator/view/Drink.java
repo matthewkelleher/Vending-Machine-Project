@@ -6,4 +6,8 @@ public class Drink extends Product {
         super(name, price, slot, inventory);
 
     }
+
+    public void getSound() {
+        System.out.println("Drinky, Drinky, Slurp Slurp!");
+    }
 }

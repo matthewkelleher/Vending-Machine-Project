@@ -35,6 +35,14 @@ public abstract class Product {
     public abstract void getSound();
 
 
+    @Override
+    public String toString() {
+        return this.getSlot () + " " + this.getName() + " " + " $" + this.getPrice() + " " + this.getInventory();
+    }
+
+//    public String listValues() {
+//        return this.getName() + " " + this.getInventory();
+//    }
 
 }
 

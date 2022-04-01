@@ -18,13 +18,13 @@ public class Menu {
                 String[] lineArray = line.split(",");
 
                 if (Objects.equals(lineArray[2], "Munchy")) {
-                    menuList.put(lineArray[0],new Munchy(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
+                    menuList.put(lineArray[0], new Munchy(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
                 } else if (Objects.equals(lineArray[2], "Drink")) {
-                    menuList.put(lineArray[0],new Drink(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
+                    menuList.put(lineArray[0], new Drink(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
                 } else if (Objects.equals(lineArray[2], "Sandwich")) {
-                    menuList.put(lineArray[0],new Sandwich(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
+                    menuList.put(lineArray[0], new Sandwich(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
                 } else if (Objects.equals(lineArray[2], "Dessert")) {
-                    menuList.put(lineArray[0],new Sandwich(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
+                    menuList.put(lineArray[0], new Sandwich(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
                 }
 
             }
@@ -35,19 +35,42 @@ public class Menu {
 
     }
 
+    public void displayItems() {
+        String returnValue = "";
+        for (Map.Entry<String, Product> entry : menuList.entrySet()) {
+            String key = entry.getKey();
+
+            Object value = entry.getValue();
+            returnValue += value + "\n";
+        }
+        System.out.println(returnValue);
+    }
+
+    public void selectItems() {
+        String returnValue = "";
+        for (Map.Entry<String, Product> entry : menuList.entrySet()) {
+            String key = entry.getKey();
+
+            Object value = entry.getValue();
+            returnValue += value + "\n";
+        }
+        System.out.println(returnValue);
+    }
+}
+
 
 
 //    @Override
 //    public String toString() {
 //
 //        String str = "";
-//        for (Product product : menuList) {
+//
 //            str += product.getSlot() + "    " + product.getName() + "   " + "$" + product.getPrice() + "    " + product.getInventory() + "\n";
 //
-//        }
+//
 //        return str;
 //    }
-}
+
 
 
 

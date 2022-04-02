@@ -1,8 +1,10 @@
 package com.techelevator.view;
 
+import java.math.BigDecimal;
+
 public class Dessert extends Product {
 
-    public Dessert(String name, double price, String slot, int inventory) {
+    public Dessert(String name, BigDecimal price, String slot, int inventory) {
         super(name, price, slot, inventory);
 
     }

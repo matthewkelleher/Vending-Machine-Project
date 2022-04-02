@@ -2,9 +2,9 @@ package com.techelevator;
 
 import com.techelevator.view.Menu;
 import com.techelevator.view.Product;
-
 import java.io.BufferedWriter;
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -18,12 +18,14 @@ public class CaTEringCapstoneCLI {
 	private Menu menu;
 	private Scanner inputScanner;
 	// doubles to BigDecimal
-	private double currentMoneyProvided = 0;
-	private double newMoneyProvided;
-	private double change;
+	private BigDecimal currentMoneyProvided = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
+	private BigDecimal newMoneyProvided = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
+	private double newMoneyDouble;
+	private BigDecimal change = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
 	private Product activeItem;
 	private boolean keepRunning = true;
-	private boolean keepRunningP = true;
+
+
 	File auditFile = new File("audit.txt");
 
 
@@ -40,59 +42,6 @@ public class CaTEringCapstoneCLI {
 	}
 
 	public void run() {
-		displayLevel1();
-
-	}
-
-	private void auditMoney(String type) {
-		// fix column width in line writes
-
-		FileWriter fw = null;
-		try {
-			fw = new FileWriter(auditFile, true);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
-		Date date = new Date();
-		BufferedWriter bw = new BufferedWriter(fw);
-
-		if (type == "feed") {
-
-			try {
-				bw.write(formatter.format(date) + " " + "MONEY FED: \t\t" + "$" + newMoneyProvided + " " + "$" + currentMoneyProvided);
-				bw.newLine();
-				bw.close();
-			} catch (IOException f) {
-				f.printStackTrace();
-			}
-		} else if (type == "purchase") {
-
-			try {
-				bw.write(formatter.format(date) + " " + activeItem.getName() + " " + activeItem.getSlot() + "\t" + "$" + newMoneyProvided + " " + "$" + currentMoneyProvided);
-				bw.newLine();
-				bw.close();
-			} catch (IOException f) {
-				f.printStackTrace();
-			}
-		} else if (type == "change") {
-			try {
-				bw.write(formatter.format(date) + " " + "CHANGE GIVEN: \t\t" + "$" + change + " " + "$" + currentMoneyProvided);
-				bw.newLine();
-				bw.close();
-			} catch (IOException f) {
-				f.printStackTrace();
-			}
-
-
-		}
-
-	}
-
-
-	//  to do -- build out main menu
-
-	public void displayLevel1() {
 		keepRunning = true;
 		while (keepRunning) {
 
@@ -106,16 +55,20 @@ public class CaTEringCapstoneCLI {
 
 
 			} else if (level1MenuInput.equalsIgnoreCase("e")) {
+				System.out.println("Thank you for your patronage! Come again soon!");
 				System.exit(0);
+			} else {
+				System.out.println("Invalid input!");
 			}
 		}
+
 	}
 
 	public void displayLevel1_P() {
-		keepRunningP = true;
+		boolean keepRunningP = true;
 		while (keepRunningP) {
 
-			System.out.println("(M) Feed Money\n(S) Select Item\n(F) Finish Transaction\n Current Money Provided: " + "$" + currentMoneyProvided);
+			System.out.println("(M) Feed Money\n(S) Select Item\n(F) Finish Transaction\nCurrent Money Provided: " + "$" + currentMoneyProvided);
 			String choice = inputScanner.nextLine();
 			if (choice.equalsIgnoreCase("m")) {
 				// insert money
@@ -126,24 +79,28 @@ public class CaTEringCapstoneCLI {
 			} else if (choice.equalsIgnoreCase("f")) {
 				displayLevel1_P_F();
 				keepRunningP = false;
+			} else {
+				System.out.println("Invalid input!");
 			}
 		}
 	}
 
 	public void displayLevel1_P_M() {
-		System.out.println("Enter cash amount: ");
-		// doubles to BigDecimal - need to change math?
-		newMoneyProvided = inputScanner.nextDouble();
-		if (newMoneyProvided == 1 || newMoneyProvided == 5 || newMoneyProvided == 10 || newMoneyProvided == 20) {
-			currentMoneyProvided += newMoneyProvided;
+		System.out.println("Enter value of bill (1|5|10|20): ");
+
+		newMoneyDouble = inputScanner.nextDouble();
+		inputScanner.nextLine();
+		if (newMoneyDouble == 1 || newMoneyDouble == 5 || newMoneyDouble == 10 || newMoneyDouble == 20) {
+			newMoneyProvided = newMoneyProvided.valueOf(newMoneyDouble).setScale(2, RoundingMode.HALF_UP);
+			currentMoneyProvided = currentMoneyProvided.add(newMoneyProvided);
 			auditMoney("feed");
 			System.out.println("Thank you!");
 			// back to purchase menu
-//				displayLevel1_P();
+
 		} else {
-			System.out.println("Invalid currency!");
+			System.out.println("Invalid currency! Please feed a $1, $5, $10 or $20 bill.");
 			// back to purchase menu
-//				displayLevel1_P();
+
 		}
 	}
 
@@ -160,20 +117,18 @@ public class CaTEringCapstoneCLI {
 				displayLevel1_P();
 			}
 
-			if (currentMoneyProvided >= activeItem.getPrice()) {
-
-				currentMoneyProvided -= activeItem.getPrice();
-				activeItem.setInventory(activeItem.getInventory() - 1);
+			if (currentMoneyProvided.compareTo(activeItem.getPrice()) > 0) {
 				auditMoney("purchase");
-
+				currentMoneyProvided = currentMoneyProvided.subtract(activeItem.getPrice());
+				activeItem.setInventory(activeItem.getInventory() - 1);
 				System.out.println(activeItem.getName() + " $" + activeItem.getPrice() + " Money Remaining: $" + currentMoneyProvided);
 				System.out.println(activeItem.getSound());
 				//back to purchase menu
-//				displayLevel1_P();
+
 			} else {
 				System.out.println("Insufficient funds! Please feed more money.");
 				//back to purchase menu
-//				displayLevel1_P();
+
 			}
 
 		} else {
@@ -184,15 +139,95 @@ public class CaTEringCapstoneCLI {
 	}
 
 	public void displayLevel1_P_F() {
-		System.out.println("Thank you for your patronage!");
-// - The customer's money is returned using nickels, dimes, quarters, and dollars (single dollars)
-//        (using the smallest amount of dollars and coins possible).
-		change = currentMoneyProvided;
-		currentMoneyProvided -= currentMoneyProvided;
+		System.out.println("Enjoy!");
+		int[] changeArray = calculateChange(currentMoneyProvided);
 		auditMoney("change");
+		System.out.println("Your change is $" + currentMoneyProvided + " in total.\n" + "The machine will dispense " + changeArray[0] + " dollar(s), " + changeArray[1] + " quarter(s), " + changeArray[2] + " dime(s), " + changeArray[3] + " nickel(s).\n");
+		currentMoneyProvided = currentMoneyProvided.subtract(currentMoneyProvided);
 		// return to main menu
-//				displayLevel1();
 		keepRunning = true;
+	}
+
+	private void auditMoney(String type) {
+		// fix column width in line writes
+
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(auditFile, true);
+		} catch (IOException e) {
+			System.out.println("Error opening audit file.");
+		}
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+		Date date = new Date();
+		BufferedWriter bw = new BufferedWriter(fw);
+
+		if (type == "feed") {
+
+			try {
+				bw.write(formatter.format(date) + " " + "MONEY FED: \t\t" + "$" + newMoneyProvided + " " + "$" + currentMoneyProvided);
+				bw.newLine();
+				bw.close();
+			} catch (IOException f) {
+				System.out.println("Error writing feed to file.");
+			}
+		} else if (type == "purchase") {
+
+			try {
+				bw.write(formatter.format(date) + " " + activeItem.getName() + " " + activeItem.getSlot() + "\t" + "$" + currentMoneyProvided + " " + "$" + currentMoneyProvided.subtract(activeItem.getPrice()));
+				bw.newLine();
+				bw.close();
+			} catch (IOException f) {
+				System.out.println("Error writing purchase to file.");
+			}
+		} else if (type == "change") {
+			try {
+				bw.write(formatter.format(date) + " " + "CHANGE GIVEN: \t\t" + "$" + currentMoneyProvided + " " + "$" + currentMoneyProvided.subtract(currentMoneyProvided));
+				bw.newLine();
+				bw.close();
+			} catch (IOException f) {
+				System.out.println("Error writing change to file.");
+			}
+
+
+		}
+
+	}
+
+	public int[] calculateChange (BigDecimal moneyLeft) {
+
+		BigDecimal bigChange = moneyLeft.multiply(new BigDecimal("100"));
+		int changeInt = bigChange.intValue();
+		int dollars = 0;
+		int quarters = 0;
+		int dimes = 0;
+		int nickels = 0;
+		int[] changeArray = {0,0,0,0};
+
+		dollars = changeInt / 100;
+		changeInt -= dollars * 100;
+		changeArray[0] = dollars;
+
+
+		if (changeInt > 0) {
+			quarters = changeInt / 25;
+			changeInt -= quarters * 25;
+			changeArray[1] = quarters;
+
+		}
+		if (changeInt > 0) {
+			dimes = changeInt / 10;
+			changeInt -= dimes * 10;
+			changeArray[2] = dimes;
+
+		}
+		if (changeInt > 0) {
+			nickels = changeInt / 5;
+			changeInt -= nickels * 5;
+			changeArray[3] = nickels;
+
+		}
+
+		return changeArray;
 	}
 }
 

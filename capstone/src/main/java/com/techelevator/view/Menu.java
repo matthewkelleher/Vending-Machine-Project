@@ -1,6 +1,7 @@
 package com.techelevator.view;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.*;
 
 public class Menu {
@@ -18,18 +19,18 @@ public class Menu {
                 String[] lineArray = line.split(",");
                 // doubles to BigDecimal
                 if (Objects.equals(lineArray[2], "Munchy")) {
-                    menuList.put(lineArray[0], new Munchy(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
+                    menuList.put(lineArray[0], new Munchy(lineArray[1], new BigDecimal(lineArray[3]), lineArray[0], 7));
                 } else if (Objects.equals(lineArray[2], "Drink")) {
-                    menuList.put(lineArray[0], new Drink(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
+                    menuList.put(lineArray[0], new Drink(lineArray[1], new BigDecimal(lineArray[3]), lineArray[0], 7));
                 } else if (Objects.equals(lineArray[2], "Sandwich")) {
-                    menuList.put(lineArray[0], new Sandwich(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
+                    menuList.put(lineArray[0], new Sandwich(lineArray[1], new BigDecimal(lineArray[3]), lineArray[0], 7));
                 } else if (Objects.equals(lineArray[2], "Dessert")) {
-                    menuList.put(lineArray[0], new Dessert(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
+                    menuList.put(lineArray[0], new Dessert(lineArray[1], new BigDecimal(lineArray[3]), lineArray[0], 7));
                 }
 
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Menu input file not found.");
         }
 
 

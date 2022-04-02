@@ -22,6 +22,8 @@ public class CaTEringCapstoneCLI {
 	private double newMoneyProvided;
 	private double change;
 	private Product activeItem;
+	private boolean keepRunning = true;
+	private boolean keepRunningP = true;
 	File auditFile = new File("audit.txt");
 
 
@@ -38,88 +40,8 @@ public class CaTEringCapstoneCLI {
 	}
 
 	public void run() {
+		displayLevel1();
 
-		// put the Main Menu and Purchase Menu in separate do-while loops?
-
-		boolean keepGoing = true;
-
-		do {
-			// main menu
-
-			System.out.println("(D) Display CaTEring Items\n(P) Purchase\n(E) Exit");
-			String level1MenuInput = inputScanner.nextLine();
-			if (level1MenuInput.equalsIgnoreCase("d")) {
-				menu.displayItems();
-			} else if (level1MenuInput.equalsIgnoreCase("p")) {
-				// purchase menu
-				System.out.println("(M) Feed Money\n(S) Select Item\n(F) Finish Transaction\n Current Money Provided: " + "$" + currentMoneyProvided);
-				String choice = inputScanner.nextLine();
-				if (choice.equalsIgnoreCase("m")) {
-					// insert money
-					// back to purchase menu after this
-					System.out.println("Enter cash amount: ");
-					// doubles to BigDecimal - need to change math?
-					newMoneyProvided = inputScanner.nextDouble();
-					if (newMoneyProvided == 1 || newMoneyProvided == 5 || newMoneyProvided == 10 || newMoneyProvided == 20) {
-						currentMoneyProvided += newMoneyProvided;
-						auditMoney("feed");
-						System.out.println("Thank you!");
-						// back to purchase menu
-					} else System.out.println("Invalid currency!");
-					// back to purchase menu
-				} else if (choice.equalsIgnoreCase("s")) {
-					menu.displayItems();
-					System.out.println("Enter the slot: ");
-					String slotChoice = inputScanner.nextLine();
-					if (menu.confirmKey(slotChoice)) {
-
-						activeItem = menu.getValueFromKey(slotChoice);
-						if(activeItem.getInventory() == 0) {
-							System.out.println("This item is no longer available.");
-							// return to purchase menu
-						}
-
-						if (currentMoneyProvided >= activeItem.getPrice()) {
-
-							currentMoneyProvided -= activeItem.getPrice();
-							activeItem.setInventory(activeItem.getInventory() - 1);
-							auditMoney("purchase");
-
-							System.out.println(activeItem.getName() + " $" + activeItem.getPrice() + " Money Remaining: $" + currentMoneyProvided);
-							System.out.println(activeItem.getSound());
-							//back to purchase menu
-						} else {
-							System.out.println("Insufficient funds! Please feed more money.");
-							//back to purchase menu
-						}
-
-					} else {
-						System.out.println("Invalid slot!");
-						//back to purchase menu
-					}
-
-
-				} else if (choice.equalsIgnoreCase("f")) {
-					// return change and update audit with return change event
-					System.out.println("Thank you for your patronage!");
-
-					change = currentMoneyProvided;
-					currentMoneyProvided -= currentMoneyProvided;
-					auditMoney("change");
-					// return to main menu
-				}
-			} else if (level1MenuInput.equalsIgnoreCase("e")) {
-				keepGoing = false;
-			}
-
-
-		} while (keepGoing);
-
-//    public void processSubD() {
-//       this.menu.displayLevel1_D();
-//
-//    }
-// }
 	}
 
 	private void auditMoney(String type) {
@@ -171,44 +93,106 @@ public class CaTEringCapstoneCLI {
 	//  to do -- build out main menu
 
 	public void displayLevel1() {
+		keepRunning = true;
+		while (keepRunning) {
+
+			System.out.println("(D) Display CaTEring Items\n(P) Purchase\n(E) Exit");
+			String level1MenuInput = inputScanner.nextLine();
+			if (level1MenuInput.equalsIgnoreCase("d")) {
+				menu.displayItems();
+			} else if (level1MenuInput.equalsIgnoreCase("p")) {
+				keepRunning = false;
+				displayLevel1_P();
 
 
+			} else if (level1MenuInput.equalsIgnoreCase("e")) {
+				System.exit(0);
+			}
+		}
 	}
 
 	public void displayLevel1_P() {
+		keepRunningP = true;
+		while (keepRunningP) {
 
-		System.out.println("(M) Feed Money\n(S) Select Item\n(C) Finish Transaction\n Current Money Provided: " + "$" + currentMoneyProvided);
-
-
+			System.out.println("(M) Feed Money\n(S) Select Item\n(F) Finish Transaction\n Current Money Provided: " + "$" + currentMoneyProvided);
+			String choice = inputScanner.nextLine();
+			if (choice.equalsIgnoreCase("m")) {
+				// insert money
+				// back to purchase menu after this
+				displayLevel1_P_M();
+			} else if (choice.equalsIgnoreCase("s")) {
+				displayLevel1_P_S();
+			} else if (choice.equalsIgnoreCase("f")) {
+				displayLevel1_P_F();
+				keepRunningP = false;
+			}
+		}
 	}
 
 	public void displayLevel1_P_M() {
-
-
+		System.out.println("Enter cash amount: ");
+		// doubles to BigDecimal - need to change math?
+		newMoneyProvided = inputScanner.nextDouble();
+		if (newMoneyProvided == 1 || newMoneyProvided == 5 || newMoneyProvided == 10 || newMoneyProvided == 20) {
+			currentMoneyProvided += newMoneyProvided;
+			auditMoney("feed");
+			System.out.println("Thank you!");
+			// back to purchase menu
+//				displayLevel1_P();
+		} else {
+			System.out.println("Invalid currency!");
+			// back to purchase menu
+//				displayLevel1_P();
+		}
 	}
 
 	public void displayLevel1_P_S() {
+		menu.displayItems();
+		System.out.println("Enter the slot: ");
+		String slotChoice = inputScanner.nextLine();
+		if (menu.confirmKey(slotChoice)) {
 
+			activeItem = menu.getValueFromKey(slotChoice);
+			if (activeItem.getInventory() == 0) {
+				System.out.println("This item is no longer available.");
+				// return to purchase menu
+				displayLevel1_P();
+			}
+
+			if (currentMoneyProvided >= activeItem.getPrice()) {
+
+				currentMoneyProvided -= activeItem.getPrice();
+				activeItem.setInventory(activeItem.getInventory() - 1);
+				auditMoney("purchase");
+
+				System.out.println(activeItem.getName() + " $" + activeItem.getPrice() + " Money Remaining: $" + currentMoneyProvided);
+				System.out.println(activeItem.getSound());
+				//back to purchase menu
+//				displayLevel1_P();
+			} else {
+				System.out.println("Insufficient funds! Please feed more money.");
+				//back to purchase menu
+//				displayLevel1_P();
+			}
+
+		} else {
+			System.out.println("Invalid slot!");
+			//back to purchase menu
+			displayLevel1_P();
+		}
 	}
 
 	public void displayLevel1_P_F() {
-
+		System.out.println("Thank you for your patronage!");
+// - The customer's money is returned using nickels, dimes, quarters, and dollars (single dollars)
+//        (using the smallest amount of dollars and coins possible).
+		change = currentMoneyProvided;
+		currentMoneyProvided -= currentMoneyProvided;
+		auditMoney("change");
+		// return to main menu
+//				displayLevel1();
+		keepRunning = true;
 	}
 }
-//public void processSubP() {
-//
-//		boolean keepGoing = true;
-//		do {
-//		this.displayLevel1_P();
-//		String choice = inputScanner.nextLine();
-//		if (choice.equals("M")) {
-//		displayLevel1_P_M();
-//		} else if (choice.equals("S")) {
-//		displayLevel1_P_S();
-//		} else if (choice.equals("C")) {
-//		displayLevel1_P_F();
-//		}
-//
-//
-//	}
-//}
+

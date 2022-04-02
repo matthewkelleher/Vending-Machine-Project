@@ -72,7 +72,12 @@ public class CaTEringCapstoneCLI {
 					System.out.println("Enter the slot: ");
 					String slotChoice = inputScanner.nextLine();
 					if (menu.confirmKey(slotChoice)) {
+
 						activeItem = menu.getValueFromKey(slotChoice);
+						if(activeItem.getInventory() == 0) {
+							System.out.println("This item is no longer available.");
+							// return to purchase menu
+						}
 
 						if (currentMoneyProvided >= activeItem.getPrice()) {
 
@@ -96,11 +101,12 @@ public class CaTEringCapstoneCLI {
 
 				} else if (choice.equalsIgnoreCase("f")) {
 					// return change and update audit with return change event
+					System.out.println("Thank you for your patronage!");
 
-					// return to main menu
 					change = currentMoneyProvided;
 					currentMoneyProvided -= currentMoneyProvided;
 					auditMoney("change");
+					// return to main menu
 				}
 			} else if (level1MenuInput.equalsIgnoreCase("e")) {
 				keepGoing = false;

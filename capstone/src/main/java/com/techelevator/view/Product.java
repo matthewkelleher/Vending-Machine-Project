@@ -6,6 +6,7 @@ public abstract class Product {
 
     private String name;
     private String slot;
+    // doubles to BigDecimal
     private double price;
     private int inventory;
 

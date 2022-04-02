@@ -16,7 +16,7 @@ public class Menu {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 String[] lineArray = line.split(",");
-
+                // doubles to BigDecimal
                 if (Objects.equals(lineArray[2], "Munchy")) {
                     menuList.put(lineArray[0], new Munchy(lineArray[1], Double.parseDouble(lineArray[3]), lineArray[0], 7));
                 } else if (Objects.equals(lineArray[2], "Drink")) {

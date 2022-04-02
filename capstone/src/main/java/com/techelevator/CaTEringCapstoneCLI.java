@@ -17,6 +17,7 @@ public class CaTEringCapstoneCLI {
 
 	private Menu menu;
 	private Scanner inputScanner;
+	// doubles to BigDecimal
 	private double currentMoneyProvided = 0;
 	private double newMoneyProvided;
 	private double change;
@@ -43,15 +44,21 @@ public class CaTEringCapstoneCLI {
 		boolean keepGoing = true;
 
 		do {
+			// main menu
+
 			System.out.println("(D) Display CaTEring Items\n(P) Purchase\n(E) Exit");
 			String level1MenuInput = inputScanner.nextLine();
 			if (level1MenuInput.equalsIgnoreCase("d")) {
 				menu.displayItems();
 			} else if (level1MenuInput.equalsIgnoreCase("p")) {
+				// purchase menu
 				System.out.println("(M) Feed Money\n(S) Select Item\n(F) Finish Transaction\n Current Money Provided: " + "$" + currentMoneyProvided);
 				String choice = inputScanner.nextLine();
 				if (choice.equalsIgnoreCase("m")) {
+					// insert money
+					// back to purchase menu after this
 					System.out.println("Enter cash amount: ");
+					// doubles to BigDecimal - need to change math?
 					newMoneyProvided = inputScanner.nextDouble();
 					if (newMoneyProvided == 1 || newMoneyProvided == 5 || newMoneyProvided == 10 || newMoneyProvided == 20) {
 						currentMoneyProvided += newMoneyProvided;

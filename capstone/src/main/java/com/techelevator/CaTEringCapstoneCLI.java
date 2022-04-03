@@ -2,32 +2,28 @@ package com.techelevator;
 
 import com.techelevator.view.Menu;
 import com.techelevator.view.Product;
-import java.io.BufferedWriter;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Scanner;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.*;
 
 
 public class CaTEringCapstoneCLI {
 
 	private Menu menu;
 	private Scanner inputScanner;
-	// doubles to BigDecimal
 	private BigDecimal currentMoneyProvided = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
 	private BigDecimal newMoneyProvided = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
-	private double newMoneyDouble;
 	private BigDecimal change = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
 	private Product activeItem;
 	private boolean keepRunning = true;
+//	private Map<String, Integer> toSalesReport = new HashMap<>();
+	private BigDecimal totalSales = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
 
 
-	File auditFile = new File("audit.txt");
 
+//	File initialSalesReport = new File("initial_sales.txt");
 
 	public CaTEringCapstoneCLI(Menu menu) {
 		this.inputScanner = new Scanner(System.in);
@@ -38,17 +34,19 @@ public class CaTEringCapstoneCLI {
 	public static void main(String[] args) {
 		Menu menu = new Menu();
 		CaTEringCapstoneCLI cli = new CaTEringCapstoneCLI(menu);
+
 		cli.run();
 	}
 
 	public void run() {
+//		menu.populateSalesReport(toSalesReport);
 		keepRunning = true;
 		while (keepRunning) {
 
 			System.out.println("(D) Display CaTEring Items\n(P) Purchase\n(E) Exit");
 			String level1MenuInput = inputScanner.nextLine();
 			if (level1MenuInput.equalsIgnoreCase("d")) {
-				menu.displayItems();
+				System.out.println(menu.toString());
 			} else if (level1MenuInput.equalsIgnoreCase("p")) {
 				keepRunning = false;
 				displayLevel1_P();
@@ -68,7 +66,7 @@ public class CaTEringCapstoneCLI {
 		boolean keepRunningP = true;
 		while (keepRunningP) {
 
-			System.out.println("(M) Feed Money\n(S) Select Item\n(F) Finish Transaction\nCurrent Money Provided: " + "$" + currentMoneyProvided);
+			System.out.println("(M) Feed Money\n(S) Select Item\n(F) Finish Transaction\n\nCurrent Money Provided: " + "$" + currentMoneyProvided);
 			String choice = inputScanner.nextLine();
 			if (choice.equalsIgnoreCase("m")) {
 				// insert money
@@ -87,8 +85,7 @@ public class CaTEringCapstoneCLI {
 
 	public void displayLevel1_P_M() {
 		System.out.println("Enter value of bill (1|5|10|20): ");
-
-		newMoneyDouble = inputScanner.nextDouble();
+		double newMoneyDouble = inputScanner.nextDouble();
 		inputScanner.nextLine();
 		if (newMoneyDouble == 1 || newMoneyDouble == 5 || newMoneyDouble == 10 || newMoneyDouble == 20) {
 			newMoneyProvided = newMoneyProvided.valueOf(newMoneyDouble).setScale(2, RoundingMode.HALF_UP);
@@ -105,7 +102,7 @@ public class CaTEringCapstoneCLI {
 	}
 
 	public void displayLevel1_P_S() {
-		menu.displayItems();
+		System.out.println(menu);
 		System.out.println("Enter the slot: ");
 		String slotChoice = inputScanner.nextLine();
 		if (menu.confirmKey(slotChoice)) {
@@ -114,11 +111,19 @@ public class CaTEringCapstoneCLI {
 			if (activeItem.getInventory() == 0) {
 				System.out.println("This item is no longer available.");
 				// return to purchase menu
-				displayLevel1_P();
+
 			}
 
 			if (currentMoneyProvided.compareTo(activeItem.getPrice()) > 0) {
 				auditMoney("purchase");
+				totalSales = totalSales.add(activeItem.getPrice());
+//				if(toSalesReport.containsKey(activeItem.getName())) {
+//					int currentSaleCount = toSalesReport.get(activeItem.getName());
+//					toSalesReport.put(activeItem.getName(), currentSaleCount + 1);
+//				} else if(!toSalesReport.containsKey(activeItem.getName())) {
+//					toSalesReport.put(activeItem.getName(), 1);
+//				}
+
 				currentMoneyProvided = currentMoneyProvided.subtract(activeItem.getPrice());
 				activeItem.setInventory(activeItem.getInventory() - 1);
 				System.out.println(activeItem.getName() + " $" + activeItem.getPrice() + " Money Remaining: $" + currentMoneyProvided);
@@ -134,7 +139,7 @@ public class CaTEringCapstoneCLI {
 		} else {
 			System.out.println("Invalid slot!");
 			//back to purchase menu
-			displayLevel1_P();
+
 		}
 	}
 
@@ -145,12 +150,13 @@ public class CaTEringCapstoneCLI {
 		System.out.println("Your change is $" + currentMoneyProvided + " in total.\n" + "The machine will dispense " + changeArray[0] + " dollar(s), " + changeArray[1] + " quarter(s), " + changeArray[2] + " dime(s), " + changeArray[3] + " nickel(s).\n");
 		currentMoneyProvided = currentMoneyProvided.subtract(currentMoneyProvided);
 		// return to main menu
+
 		keepRunning = true;
 	}
 
 	private void auditMoney(String type) {
-		// fix column width in line writes
 
+		File auditFile = new File("Audit.txt");
 		FileWriter fw = null;
 		try {
 			fw = new FileWriter(auditFile, true);
@@ -161,27 +167,30 @@ public class CaTEringCapstoneCLI {
 		Date date = new Date();
 		BufferedWriter bw = new BufferedWriter(fw);
 
-		if (type == "feed") {
+		if (Objects.equals(type, "feed")) {
 
 			try {
-				bw.write(formatter.format(date) + " " + "MONEY FED: \t\t" + "$" + newMoneyProvided + " " + "$" + currentMoneyProvided);
+				String formatStr = "%-20s %-20s %-15s %-15s";
+				bw.write(String.format(formatStr, formatter.format(date), "MONEY FED:", "$" + newMoneyProvided, "$" + currentMoneyProvided));
 				bw.newLine();
 				bw.close();
 			} catch (IOException f) {
 				System.out.println("Error writing feed to file.");
 			}
-		} else if (type == "purchase") {
+		} else if (Objects.equals(type, "purchase")) {
 
 			try {
-				bw.write(formatter.format(date) + " " + activeItem.getName() + " " + activeItem.getSlot() + "\t" + "$" + currentMoneyProvided + " " + "$" + currentMoneyProvided.subtract(activeItem.getPrice()));
+				String formatStr = "%-20s %-20s %-15s %-15s";
+				bw.write(String.format(formatStr,formatter.format(date), activeItem.getName() + " " + activeItem.getSlot(),"$" + currentMoneyProvided, "$" + currentMoneyProvided.subtract(activeItem.getPrice())));
 				bw.newLine();
 				bw.close();
 			} catch (IOException f) {
 				System.out.println("Error writing purchase to file.");
 			}
-		} else if (type == "change") {
+		} else if (Objects.equals(type, "change")) {
 			try {
-				bw.write(formatter.format(date) + " " + "CHANGE GIVEN: \t\t" + "$" + currentMoneyProvided + " " + "$" + currentMoneyProvided.subtract(currentMoneyProvided));
+				String formatStr = "%-20s %-20s %-15s %-15s";
+				bw.write(String.format(formatStr,formatter.format(date),"CHANGE GIVEN:", "$" + currentMoneyProvided,"$" + currentMoneyProvided.subtract(currentMoneyProvided)));
 				bw.newLine();
 				bw.close();
 			} catch (IOException f) {
@@ -229,5 +238,53 @@ public class CaTEringCapstoneCLI {
 
 		return changeArray;
 	}
-}
+
+//	private void generateSalesReport() {
+//		List<String> theText = new ArrayList<>();
+//		Date date = new Date();
+//		String readFile = date + "SalesReport" + ".csv";
+//
+//		File file = new File(readFile);
+//		Scanner fileScanner = null;
+//		try {
+//			fileScanner = new Scanner(file);
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		String writeFile = date + "SalesReport" + ".csv";
+//		FileWriter myWriter = null;
+//		try {
+//			myWriter = new FileWriter(writeFile);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		while (fileScanner.hasNextLine()) {
+//
+//			String line = fileScanner.nextLine();
+//			theText.add(line);
+//
+//		for (Map.Entry<String, Integer> entry : toSalesReport.entrySet()) {
+//			String key = entry.getKey();
+//			int value = entry.getValue();
+//			for (String i : theText) {
+//				if (i.contains(key)) {
+//					String[] splitLine = i.split(",");
+//					int valueToWrite = Integer.parseInt(splitLine[1]) + value;
+//					try {
+//						myWriter.write(key + "," + valueToWrite);
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//
+//			}
+//
+//			}
+//
+//		}
+
+
+
+	}
+
 

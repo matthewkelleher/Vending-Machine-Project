@@ -1,16 +1,16 @@
 package com.techelevator.view;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public abstract class Product {
 
     private String name;
     private String slot;
-    // doubles to BigDecimal
-    private double price;
+    private BigDecimal price;
     private int inventory;
 
-    public Product(String name, double price, String slot, int inventory) {
+    public Product(String name, BigDecimal price, String slot, int inventory) {
        this.name = name;
        this.price = price;
        this.slot = slot;
@@ -21,8 +21,8 @@ public abstract class Product {
         return name;
     }
 
-    public double getPrice() {
-        return price;
+    public BigDecimal getPrice() {
+        return price.setScale(2, RoundingMode.HALF_UP);
     }
 
     public String getSlot() { return slot; }

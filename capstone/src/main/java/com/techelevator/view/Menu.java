@@ -9,12 +9,13 @@ public class Menu {
 
     private HashMap<String, Product> menuList = new HashMap<>();
 //    private List<String> reportList = new ArrayList();
-    File file = new File("C:\\Users\\Student\\workspace\\module-1-capstone-team-7\\capstone\\catering1.csv");
-    Scanner fileScanner;
+    private File file = new File("C:\\Users\\Student\\workspace\\module-1-capstone-team-7\\capstone\\catering1.csv");
+
 
   {
         try {
-            fileScanner = new Scanner(file);
+
+            Scanner fileScanner = new Scanner(file);
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 String[] lineArray = line.split(",");
@@ -51,11 +52,10 @@ public class Menu {
          return returnValue;
     }
 
-    public Product getValueFromKey(String key) {
-        return menuList.get(key);
-    }
+    public Product getValueFromKey(String key) {return menuList.get(key);    }
 
     public Boolean confirmKey(String key) {return menuList.containsKey(key); }
+}
 
 //    public void populateSalesReport (Map map) {
 //        for(String i : reportList) {
@@ -65,7 +65,7 @@ public class Menu {
 //
 //    }
 
-}
+
 
 
 

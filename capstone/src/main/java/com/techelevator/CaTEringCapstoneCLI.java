@@ -15,14 +15,10 @@ public class CaTEringCapstoneCLI {
 	private Scanner inputScanner;
 	private BigDecimal currentMoneyProvided = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
 	private BigDecimal newMoneyProvided = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
-	private BigDecimal change = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
 	private Product activeItem;
 	private boolean keepRunning = true;
 //	private Map<String, Integer> toSalesReport = new HashMap<>();
-	private BigDecimal totalSales = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
-
-
-
+//	private BigDecimal totalSales = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
 //	File initialSalesReport = new File("initial_sales.txt");
 
 	public CaTEringCapstoneCLI(Menu menu) {
@@ -69,8 +65,7 @@ public class CaTEringCapstoneCLI {
 			System.out.println("(M) Feed Money\n(S) Select Item\n(F) Finish Transaction\n\nCurrent Money Provided: " + "$" + currentMoneyProvided);
 			String choice = inputScanner.nextLine();
 			if (choice.equalsIgnoreCase("m")) {
-				// insert money
-				// back to purchase menu after this
+
 				displayLevel1_P_M();
 			} else if (choice.equalsIgnoreCase("s")) {
 				displayLevel1_P_S();
@@ -116,7 +111,7 @@ public class CaTEringCapstoneCLI {
 
 			if (currentMoneyProvided.compareTo(activeItem.getPrice()) > 0) {
 				auditMoney("purchase");
-				totalSales = totalSales.add(activeItem.getPrice());
+//				totalSales = totalSales.add(activeItem.getPrice());
 //				if(toSalesReport.containsKey(activeItem.getName())) {
 //					int currentSaleCount = toSalesReport.get(activeItem.getName());
 //					toSalesReport.put(activeItem.getName(), currentSaleCount + 1);
@@ -238,6 +233,7 @@ public class CaTEringCapstoneCLI {
 
 		return changeArray;
 	}
+}
 
 //	private void generateSalesReport() {
 //		List<String> theText = new ArrayList<>();
@@ -285,6 +281,6 @@ public class CaTEringCapstoneCLI {
 
 
 
-	}
+
 
 

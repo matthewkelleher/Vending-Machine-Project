@@ -80,10 +80,15 @@ public class CaTEringCapstoneCLI {
 
 	public void displayLevel1_P_M() {
 		System.out.println("Enter value of bill (1|5|10|20): ");
-		double newMoneyDouble = inputScanner.nextDouble();
+		double newMoneyDouble = 0;
+		try{
+			newMoneyDouble = inputScanner.nextDouble(); }
+		catch (InputMismatchException z) {
+
+		}
 		inputScanner.nextLine();
 		if (newMoneyDouble == 1 || newMoneyDouble == 5 || newMoneyDouble == 10 || newMoneyDouble == 20) {
-			newMoneyProvided = newMoneyProvided.valueOf(newMoneyDouble).setScale(2, RoundingMode.HALF_UP);
+			newMoneyProvided = BigDecimal.valueOf(newMoneyDouble).setScale(2, RoundingMode.HALF_UP);
 			currentMoneyProvided = currentMoneyProvided.add(newMoneyProvided);
 			auditMoney("feed");
 			System.out.println("Thank you!");
@@ -99,18 +104,17 @@ public class CaTEringCapstoneCLI {
 	public void displayLevel1_P_S() {
 		System.out.println(menu);
 		System.out.println("Enter the slot: ");
-		String slotChoice = inputScanner.nextLine();
+		String slotChoice = inputScanner.nextLine().toUpperCase();
 		if (menu.confirmKey(slotChoice)) {
 
 			activeItem = menu.getValueFromKey(slotChoice);
-			if (activeItem.getInventory() == 0) {
+			if (activeItem.getInventory() <= 0) {
 				System.out.println("This item is no longer available.");
 				// return to purchase menu
+			} else {
 
-			}
-
-			if (currentMoneyProvided.compareTo(activeItem.getPrice()) > 0) {
-				auditMoney("purchase");
+				if (currentMoneyProvided.compareTo(activeItem.getPrice()) >= 0) {
+					auditMoney("purchase");
 //				totalSales = totalSales.add(activeItem.getPrice());
 //				if(toSalesReport.containsKey(activeItem.getName())) {
 //					int currentSaleCount = toSalesReport.get(activeItem.getName());
@@ -119,16 +123,17 @@ public class CaTEringCapstoneCLI {
 //					toSalesReport.put(activeItem.getName(), 1);
 //				}
 
-				currentMoneyProvided = currentMoneyProvided.subtract(activeItem.getPrice());
-				activeItem.setInventory(activeItem.getInventory() - 1);
-				System.out.println(activeItem.getName() + " $" + activeItem.getPrice() + " Money Remaining: $" + currentMoneyProvided);
-				System.out.println(activeItem.getSound());
-				//back to purchase menu
+					currentMoneyProvided = currentMoneyProvided.subtract(activeItem.getPrice());
+					activeItem.setInventory(activeItem.getInventory() - 1);
+					System.out.println(activeItem.getName() + " $" + activeItem.getPrice() + " Money Remaining: $" + currentMoneyProvided);
+					System.out.println(activeItem.getSound());
+					//back to purchase menu
 
-			} else {
-				System.out.println("Insufficient funds! Please feed more money.");
-				//back to purchase menu
+				} else {
+					System.out.println("Insufficient funds! Please feed more money.");
+					//back to purchase menu
 
+				}
 			}
 
 		} else {

@@ -30,10 +30,10 @@ public abstract class Product {
     public Integer getInventory() { return inventory; }
 
     public String stringifyInventory() {
-        if(this.inventory != 0) {
+        if(this.inventory > 0) {
             return String.valueOf(inventory);
         } else {
-            return "NO LONGER AVAILABLE";
+            return "NONE";
         }
     }
 
@@ -46,7 +46,7 @@ public abstract class Product {
 
     @Override
     public String toString() {
-        return this.getSlot () + " " + this.getName() + " " + " $" + this.getPrice() + " " + this.stringifyInventory();
+        return this.getSlot () + " " + this.getName() + " " + " $" + this.getPrice() + " " + this.stringifyInventory() + " AVAILABLE";
     }
 
 }
